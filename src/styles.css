@@ -1,0 +1,558 @@
+/* ================================================================
+   DailyStreak — "ledger / stamp card" aesthetic
+   ================================================================ */
+
+:root {
+  --paper: #efebe1;
+  --card: #f7f4ec;
+  --card-border: #d9d2c0;
+
+  --ink: #232019;
+  --ink-soft: #55503f;
+
+  --indigo: #3d5a80;
+  --moss: #5b7553;
+  --rust: #b5542b;
+
+  /* Heatmap: 5 ink-stamp shades, empty -> done (not GitHub green) */
+  --stamp-0: #e4ded0;
+  --stamp-1: #c3cddb;
+  --stamp-2: #90a6c0;
+  --stamp-3: #5f7ea3;
+  --stamp-4: #3d5a80;
+
+  --radius: 6px;
+
+  --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
+  --font-body: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  color: var(--ink);
+  font-family: var(--font-body);
+  background-color: var(--paper);
+  /* Two overlaid gradients = faint 28px graph-paper grid */
+  background-image:
+    linear-gradient(to right, rgba(85, 80, 63, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(85, 80, 63, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 40px 20px 64px;
+}
+
+/* ---------- Masthead ---------- */
+
+.masthead {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.4rem, 7vw, 3.4rem);
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: var(--ink);
+}
+
+.wordmark span {
+  color: var(--indigo);
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  margin: 8px 0 0;
+}
+
+/* ---------- Summary strip ---------- */
+
+.summary-strip {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 18px 22px;
+  margin-bottom: 26px;
+}
+
+.summary-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.summary-label {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.64rem;
+  color: var(--ink-soft);
+}
+
+.summary-value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 2.2rem;
+  line-height: 1;
+  color: var(--indigo);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.summary-value--accent {
+  color: var(--rust);
+}
+
+.summary-divider {
+  color: var(--ink-soft);
+  font-size: 1.6rem;
+  margin: 0 2px;
+}
+
+.summary-unit {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+}
+
+.summary-rule {
+  width: 1px;
+  background: var(--card-border);
+}
+
+/* ---------- Add habit form ---------- */
+
+.add-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 30px;
+}
+
+.add-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1 1 200px;
+}
+
+.add-form__field--category {
+  flex: 0 1 160px;
+}
+
+.field-label {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.62rem;
+  color: var(--ink-soft);
+}
+
+.text-input,
+.select-input {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--ink);
+  background: #fffdf8;
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  width: 100%;
+}
+
+.select-input {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.text-input::placeholder {
+  color: #a8a08c;
+}
+
+/* ---------- Buttons ---------- */
+
+.btn {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  padding: 11px 18px;
+  cursor: pointer;
+  transition: transform 0.12s ease, background 0.12s ease, color 0.12s ease;
+}
+
+.btn--primary {
+  background: var(--indigo);
+  color: #fdfcf9;
+  border-color: var(--indigo);
+}
+
+.btn--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.btn--primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--ink-soft);
+  border-color: var(--card-border);
+}
+
+.btn--ghost:hover {
+  color: var(--ink);
+  border-color: var(--ink-soft);
+}
+
+.btn--delete {
+  padding: 7px 14px;
+  font-size: 0.66rem;
+}
+
+.btn--danger {
+  background: var(--rust);
+  color: #fdfcf9;
+  border-color: var(--rust);
+  padding: 7px 14px;
+  font-size: 0.66rem;
+}
+
+.btn--danger:hover {
+  transform: translateY(-1px);
+}
+
+/* ---------- Empty state ---------- */
+
+.empty-state {
+  text-align: center;
+  background: var(--card);
+  border: 1px dashed var(--card-border);
+  border-radius: var(--radius);
+  padding: 54px 24px;
+}
+
+.empty-stamp {
+  font-size: 2rem;
+  color: var(--indigo);
+  margin-bottom: 10px;
+}
+
+.empty-state h2 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 0 0 8px;
+}
+
+.empty-state p {
+  color: var(--ink-soft);
+  margin: 0 auto;
+  max-width: 340px;
+  line-height: 1.5;
+}
+
+/* ---------- Habit list + card ---------- */
+
+.habit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.habit-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+}
+
+.habit-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(35, 32, 25, 0.07);
+}
+
+.habit-card__head {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* ---------- Circular checkbox ---------- */
+
+.check {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--card-border);
+  background: #fffdf8;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  transition: border-color 0.12s ease, background 0.12s ease, transform 0.12s ease;
+}
+
+.check:hover {
+  border-color: var(--moss);
+}
+
+.check__tick {
+  width: 22px;
+  height: 22px;
+  color: #fffdf8;
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.14s ease, transform 0.14s ease;
+}
+
+.check--done {
+  background: var(--moss);
+  border-color: var(--moss);
+}
+
+.check--done .check__tick {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.habit-card__title {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.habit-name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.15;
+  margin: 0;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.tag {
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.6rem;
+  font-weight: 500;
+  color: var(--indigo);
+  background: rgba(61, 90, 128, 0.12);
+  border-radius: 3px;
+  padding: 3px 8px;
+}
+
+/* ---------- Streak stats ---------- */
+
+.habit-card__stats {
+  display: flex;
+  gap: 20px;
+  flex: 0 0 auto;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat__num {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.9rem;
+  line-height: 1;
+}
+
+.stat__num--current {
+  color: var(--rust);
+}
+
+.stat__num--best {
+  color: var(--indigo);
+}
+
+.stat__label {
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.56rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Stamp grid (heatmap) ---------- */
+
+.stampgrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 20px 0 4px;
+}
+
+.stamp {
+  width: 14px;
+  height: 14px;
+  border-radius: 2px;
+  background: var(--stamp-0);
+  border: 1px solid rgba(85, 80, 63, 0.08);
+}
+
+.stamp--l0 { background: var(--stamp-0); }
+.stamp--l1 { background: var(--stamp-1); }
+.stamp--l2 { background: var(--stamp-2); }
+.stamp--l3 { background: var(--stamp-3); }
+.stamp--l4 { background: var(--stamp-4); }
+
+.stamp--today {
+  outline: 2px solid var(--rust);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+/* ---------- Card footer / delete confirm ---------- */
+
+.habit-card__foot {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.confirm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.confirm__text {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--rust);
+}
+
+/* ---------- Footer ---------- */
+
+.app-footer {
+  margin-top: 40px;
+  text-align: center;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.6rem;
+  color: var(--ink-soft);
+}
+
+/* ---------- Focus states (keyboard visible) ---------- */
+
+.btn:focus-visible,
+.check:focus-visible,
+.text-input:focus-visible,
+.select-input:focus-visible {
+  outline: 2px solid var(--indigo);
+  outline-offset: 2px;
+}
+
+.text-input:focus-visible,
+.select-input:focus-visible {
+  outline-offset: 0;
+  border-color: var(--indigo);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 560px) {
+  .app {
+    padding: 28px 14px 48px;
+  }
+
+  .habit-card__head {
+    flex-wrap: wrap;
+  }
+
+  .habit-card__stats {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 28px;
+    padding-left: 56px; /* align under the title, past the checkbox */
+  }
+
+  .stamp {
+    width: 11px;
+    height: 11px;
+    /* narrower rows -> fewer columns naturally, via flex-wrap */
+  }
+
+  .summary-value {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .stamp {
+    width: 9px;
+    height: 9px;
+    gap: 3px;
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
