@@ -1,11 +1,23 @@
 import { useMemo } from 'react';
 import { useHabits, currentStreak, todayKey } from './hooks/useHabits';
+import { useTheme } from './hooks/useTheme';
+import ThemeToggle from './components/ThemeToggle';
 import SummaryStrip from './components/SummaryStrip';
 import AddHabitForm from './components/AddHabitForm';
 import HabitCard from './components/HabitCard';
+import DataControls from './components/DataControls';
 
 export default function App() {
-  const { habits, addHabit, deleteHabit, toggleToday } = useHabits();
+  const {
+    habits,
+    addHabit,
+    updateHabit,
+    deleteHabit,
+    moveHabit,
+    toggleDay,
+    replaceHabits,
+  } = useHabits();
+  const { theme, toggleTheme } = useTheme();
   const today = todayKey();
 
   const { completedToday, bestStreak } = useMemo(() => {
@@ -20,10 +32,11 @@ export default function App() {
   return (
     <div className="app">
       <header className="masthead">
-        <h1 className="wordmark">
-          Daily<span>Streak</span>
-        </h1>
-        <p className="tagline">Stamp the card. Keep the chain unbroken.</p>
+        <div className="masthead__text">
+          <h1 className="wordmark">DailyStreak</h1>
+          <p className="tagline">Daily habit tracker</p>
+        </div>
+        <ThemeToggle theme={theme} onToggle={toggleTheme} />
       </header>
 
       <SummaryStrip
@@ -36,26 +49,31 @@ export default function App() {
 
       {habits.length === 0 ? (
         <div className="empty-state">
-          <div className="empty-stamp" aria-hidden="true">✦</div>
-          <h2>Your card is blank</h2>
-          <p>Add your first habit above and start stamping. One day at a time.</p>
+          <h2>No habits yet</h2>
+          <p>Add one above to get started.</p>
         </div>
       ) : (
         <main className="habit-list">
-          {habits.map((habit) => (
+          {habits.map((habit, i) => (
             <HabitCard
               key={habit.id}
               habit={habit}
               today={today}
-              onToggle={toggleToday}
+              index={i}
+              total={habits.length}
+              onToggleDay={toggleDay}
+              onUpdate={updateHabit}
               onDelete={deleteHabit}
+              onMove={moveHabit}
             />
           ))}
         </main>
       )}
 
+      <DataControls habits={habits} onReplace={replaceHabits} />
+
       <footer className="app-footer">
-        <span>Stored locally on this device — no account, no cloud.</span>
+        <span>Saved in this browser only.</span>
       </footer>
     </div>
   );
